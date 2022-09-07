@@ -1,0 +1,27 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: istio-php-vs
+  namespace: php-micro-istio
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - istio-php-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /api/user
+    route:
+    - destination:
+        host: mircro-users-service
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /api/order
+    route:
+    - destination:
+        host: mircro-orders-service
+        port:
+          number: 80

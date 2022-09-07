@@ -1,0 +1,59 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mircro-users-deploy
+  namespace: php-micro-istio
+  labels:
+    app: php-mircro-users
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: php-mircro-users
+  template:
+    metadata:
+      labels:
+        app: php-mircro-users
+    spec:
+      containers:
+      - name: nginx
+        image: lufeijun1234/nginx-micro-istio:v0.0.1
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 80
+      - name: php
+        image: lufeijun1234/php-micro-istio-user:v0.0.3
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 9000
+        lifecycle:
+          postStart:
+            exec:
+              command: ["cp", "/laravel/.env", "/var/www/k8s-php"]
+        volumeMounts:
+         - name: user-env
+           mountPath: /laravel
+           readOnly: true  
+      volumes:
+        - name: user-env
+          configMap:
+            name: user-env
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mircro-users-service
+  namespace: php-micro-istio
+  labels:
+      app: mircro-users-service
+spec:
+  selector:
+    app: php-mircro-users
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30180
+  type: NodePort

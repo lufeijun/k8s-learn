@@ -1,0 +1,25 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: istio-php-in-vs-2
+  namespace: php-micro-istio
+spec:
+  hosts:
+  - istio-php-155-com
+  http:
+  - match:
+    - uri:
+        prefix: /api/user
+    route:
+    - destination:
+        host: mircro-users-service
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /api/order
+    route:
+    - destination:
+        host: mircro-orders-service
+        port:
+          number: 80
