@@ -8,8 +8,7 @@ spec:
     matchLabels:
       app: go-zero
   replicas: 3
-  # 更新策略
-  strategy:
+  strategy: # 更新策略
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 100%
@@ -24,6 +23,14 @@ spec:
         image: lufeijun1234/docker-go-zero-demo
         ports:
         - containerPort: 8888
+        volumeMounts:
+        - name: env  # 挂载数据卷 (要跟下面的 name 名字相同)
+          mountPath: /app/etc
+          readOnly: true
+      volumes:
+      - name: env   # 创建一个数据卷
+        configMap:  # ConfigMap 方式
+          name: go-zero-config   
 ---
 apiVersion: v1
 kind: Service

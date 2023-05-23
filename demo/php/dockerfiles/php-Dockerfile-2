@@ -1,0 +1,11 @@
+# 添加 redis 扩展
+# 1、在另一个版本中，进入容器内部，使用命令安装对应的扩展，
+# 2、将容器中安装好的 redis.so 复制出来，放到本地
+# 3、制作新的 php-fpm 镜像时，使用 copy 命令复制到对应的目录下
+# 4、在 php.ini 中开启对应模块
+FROM bitnami/php-fpm:8.1.19
+ADD php.ini /opt/bitnami/php/lib/php.ini
+ADD redis.so /opt/bitnami/php/lib/php/extensions
+ADD k8s-php /var/www/k8s-php
+ADD .ssh /root/  # 为了 git 拉取代码准备
+ADD git /usr/bin/git

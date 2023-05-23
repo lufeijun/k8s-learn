@@ -12,7 +12,7 @@ ADD go.mod .
 ADD go.sum .
 RUN go mod download
 COPY . .
-COPY demo/etc /app/etc
+#COPY demo/etc /app/etc
 RUN go build -ldflags="-s -w" -o /app/demo demo/demo.go
 
 
@@ -24,6 +24,6 @@ ENV TZ Asia/Shanghai
 
 WORKDIR /app
 COPY --from=builder /app/demo /app/demo
-COPY --from=builder /app/etc /app/etc
+#COPY --from=builder /app/etc /app/etc
 
 CMD ["./demo", "-f", "etc/demo-api.yaml"]

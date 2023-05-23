@@ -1,0 +1,35 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: php-nginx
+  namespace: demo
+spec:
+  selector:
+    matchLabels:
+      app: php-nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: php-nginx
+    spec:
+      containers:
+        - name: php-nginx
+          image: lufeijun1234/nginx:1.24.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: php-nginx-svc
+  namespace: demo
+spec:
+  selector:
+    app: php-nginx
+  type: NodePort  
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30080
